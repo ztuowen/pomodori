@@ -10,7 +10,7 @@ int main(int argc, char** argv)
     notify_init("Tomodori");
     tres lastres;
     lastres.time=0;
-    settimer(&lastres,1);
+    settimer(&lastres,POTIME);
     gtk_main();
     return 0;
 }

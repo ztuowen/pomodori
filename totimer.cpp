@@ -3,7 +3,7 @@
 //
 
 #include "totimer.h"
-#include<stdlib.h>
+#include<stdio.h>
 
 void quit(NotifyNotification *note,gpointer user_data)
 {
@@ -16,7 +16,7 @@ void timeup(NotifyNotification *note,const char *action,gpointer user_data){
     tres* lastres = (tres*)user_data;
     switch (action[0]){
         case 'M':
-            settimer(lastres, 5);
+            settimer(lastres, POTEXT);
             break;
         case 'G':
             log(lastres,1);
@@ -32,7 +32,12 @@ bool notify(gpointer user_data)
 {
     tres* lastres = (tres*)user_data;
     NotifyNotification *n;
-    n = notify_notification_new ("Tomodori","Time's Up", NULL);
+    char str[20];
+    if (lastres->time>POTIME)
+        sprintf(str,"Time's up!(%d)",lastres->time-POTIME);
+    else
+        sprintf(str,"Time's up!");
+    n = notify_notification_new ("Tomodori",str, NULL);
     notify_notification_set_urgency(n,NOTIFY_URGENCY_CRITICAL);
     notify_notification_add_action(n,"M", "More",(NotifyActionCallback)timeup,lastres,NULL);
     notify_notification_add_action(n,"G", "Good",(NotifyActionCallback)timeup,lastres,NULL);
