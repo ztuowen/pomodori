@@ -13,7 +13,7 @@ int main(int argc, char** argv)
     tres lastres;
     lastres.time=0;
     lastres.reason=argv[1];
-    settimer(&lastres,1);
+    settimer(&lastres,POTIME);
     gtk_main();
     return 0;
 }
