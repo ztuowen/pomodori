@@ -6,6 +6,7 @@
 #include "stdlib.h"
 #include<iostream>
 #include <fstream>
+#include <ctime>
 
 using namespace std;
 void log(tres* res,int code)
@@ -14,7 +15,8 @@ void log(tres* res,int code)
     {
         ofstream fot;
         fot.open("~/.pomodori");
-        fot<<1<<endl;
+        time_t now = time(0);
+        fot<<ctime(&now)<<endl;
     }
     exit(0);
 }

@@ -4,7 +4,6 @@
 
 #include "totimer.h"
 #include<stdlib.h>
-#include<stdio.h>
 
 void quit(NotifyNotification *note,gpointer user_data)
 {
