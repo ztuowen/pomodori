@@ -4,19 +4,37 @@
 
 #include "logging.h"
 #include "stdlib.h"
-#include<iostream>
-#include <fstream>
+#include "stdio.h"
 #include <ctime>
+#include <string>
+#include <sqlite3.h>
+#include <unistd.h>
+#include <pwd.h>
+
+struct passwd *pw = getpwuid(getuid());
 
 using namespace std;
 void log(tres* res,int code)
 {
     if (code)
     {
-        ofstream fot;
-        fot.open("~/.pomodori");
-        time_t now = time(0);
-        fot<<ctime(&now)<<endl;
+        sqlite3 *db;
+        char *zErrMsg = 0;
+        char sqlop[50];
+        sprintf(sqlop,"%s/.pomodori",pw->pw_dir);
+        int rc = sqlite3_open(sqlop,&db);
+        if( rc ){
+            fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+            sqlite3_close(db);
+            exit(0);
+        }
+        sprintf(sqlop,"insert into log (Cat) Values ('%s');",res->reason);
+        rc = sqlite3_exec(db, sqlop, NULL, 0, &zErrMsg);
+        if( rc!=SQLITE_OK ){
+            fprintf(stderr, "SQL error: %s\n", zErrMsg);
+            sqlite3_free(zErrMsg);
+            }
+        sqlite3_close(db);
     }
     exit(0);
 }

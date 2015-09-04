@@ -37,7 +37,7 @@ bool notify(gpointer user_data)
         sprintf(str,"Time's up!(%d)",lastres->time-POTIME);
     else
         sprintf(str,"Time's up!");
-    n = notify_notification_new ("Tomodori",str, NULL);
+    n = notify_notification_new ("Pomodori",str, NULL);
     notify_notification_set_urgency(n,NOTIFY_URGENCY_CRITICAL);
     notify_notification_add_action(n,"M", "More",(NotifyActionCallback)timeup,lastres,NULL);
     notify_notification_add_action(n,"G", "Good",(NotifyActionCallback)timeup,lastres,NULL);

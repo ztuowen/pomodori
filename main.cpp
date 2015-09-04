@@ -6,11 +6,14 @@
 
 int main(int argc, char** argv)
 {
+    if (argc<2)
+        return 0;
     gtk_init(&argc, &argv);
-    notify_init("Tomodori");
+    notify_init("pomodori");
     tres lastres;
     lastres.time=0;
-    settimer(&lastres,POTIME);
+    lastres.reason=argv[1];
+    settimer(&lastres,1);
     gtk_main();
     return 0;
 }
