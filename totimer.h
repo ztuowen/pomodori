@@ -9,7 +9,7 @@
 #include "logging.h"
 #include "glib.h"
 
-#define POTIME 25
+#define POTIME 1
 #define POTEXT 5
 
 void timer_init();

@@ -69,7 +69,7 @@ void timer_set(tres* lastres, guint32 wait)
     {
         timeout=true;
         lastres->time = lastres->time + wait;
-        timerid = g_timeout_add(wait*60*1000,(GSourceFunc)notify,lastres);
+        timerid = g_timeout_add(wait*1000,(GSourceFunc)notify,lastres);
     }
 }
 

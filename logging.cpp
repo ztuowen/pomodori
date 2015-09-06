@@ -28,7 +28,7 @@ void log(tres* res,int code)
         if( rc ){
             fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
             sqlite3_close(db);
-            exit(0);
+            return;
         }
         sprintf(sqlop,"insert into log (Cat) Values ('%s');",res->reason);
         rc = sqlite3_exec(db, sqlop, NULL, 0, &zErrMsg);
@@ -38,7 +38,6 @@ void log(tres* res,int code)
             }
         sqlite3_close(db);
     }
-    delete res->reason;
     delete res;
     tray_deactivate();
 }
