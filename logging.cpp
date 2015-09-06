@@ -10,6 +10,8 @@
 #include <sqlite3.h>
 #include <unistd.h>
 #include <pwd.h>
+#include "pomodori.h"
+#include "trayicon.h"
 
 struct passwd *pw = getpwuid(getuid());
 
@@ -21,7 +23,7 @@ void log(tres* res,int code)
         sqlite3 *db;
         char *zErrMsg = 0;
         char sqlop[50];
-        sprintf(sqlop,"%s/.pomodori",pw->pw_dir);
+        sprintf(sqlop,"%s/." APPNAME,pw->pw_dir);
         int rc = sqlite3_open(sqlop,&db);
         if( rc ){
             fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
@@ -36,5 +38,7 @@ void log(tres* res,int code)
             }
         sqlite3_close(db);
     }
-    exit(0);
+    delete res->reason;
+    delete res;
+    tray_deactivate();
 }

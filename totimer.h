@@ -12,8 +12,12 @@
 #define POTIME 25
 #define POTEXT 5
 
+void timer_init();
+
 bool notify(gpointer user_data);
 
-int settimer(tres* lastres,guint32 wait);
+void timer_set(tres* lastres,guint32 wait);
+
+void timer_kill();
 
 #endif //POMODORI_TOTIMER_H

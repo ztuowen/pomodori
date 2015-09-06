@@ -4,6 +4,21 @@
 
 #include "totimer.h"
 #include<stdio.h>
+#include "pomodori.h"
+#include "trayicon.h"
+
+bool timeout;
+guint timerid;
+
+void timer_kill()
+{
+    if (timeout)
+    {
+        g_source_remove(timerid);
+        timeout=false;
+        tray_deactivate();
+    }
+}
 
 void quit(NotifyNotification *note,gpointer user_data)
 {
@@ -16,7 +31,7 @@ void timeup(NotifyNotification *note,const char *action,gpointer user_data){
     tres* lastres = (tres*)user_data;
     switch (action[0]){
         case 'M':
-            settimer(lastres, POTEXT);
+            timer_set(lastres, POTEXT);
             break;
         case 'G':
             log(lastres,1);
@@ -30,6 +45,7 @@ void timeup(NotifyNotification *note,const char *action,gpointer user_data){
 
 bool notify(gpointer user_data)
 {
+    timeout=false;
     tres* lastres = (tres*)user_data;
     NotifyNotification *n;
     char str[20];
@@ -37,19 +53,28 @@ bool notify(gpointer user_data)
         sprintf(str,"Time's up!(%d)",lastres->time-POTIME);
     else
         sprintf(str,"Time's up!");
-    n = notify_notification_new ("Pomodori",str, NULL);
+    n = notify_notification_new (APPNAME,str, NULL);
     notify_notification_set_urgency(n,NOTIFY_URGENCY_CRITICAL);
     notify_notification_add_action(n,"M", "More",(NotifyActionCallback)timeup,lastres,NULL);
     notify_notification_add_action(n,"G", "Good",(NotifyActionCallback)timeup,lastres,NULL);
     g_signal_connect (n, "closed", G_CALLBACK(quit), NULL);
-//    printf("1");
     notify_notification_set_timeout(n,0); //3 seconds
     notify_notification_show(n,NULL);
     return FALSE;
 }
 
-int settimer(tres* lastres, guint32 wait)
+void timer_set(tres* lastres, guint32 wait)
 {
-    lastres->time = lastres->time + wait;
-    g_timeout_add(wait*60*1000,(GSourceFunc)notify,lastres);
+    if (!timeout)
+    {
+        timeout=true;
+        lastres->time = lastres->time + wait;
+        timerid = g_timeout_add(wait*60*1000,(GSourceFunc)notify,lastres);
+    }
+}
+
+void timer_init()
+{
+    timeout=false;
+    notify_init(APPNAME);
 }

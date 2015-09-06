@@ -9,7 +9,7 @@
 
 typedef struct tres {
     guint32 time;
-    const char* reason;
+    char* reason;
 } tres;
 
 void log(tres* res,int code);
